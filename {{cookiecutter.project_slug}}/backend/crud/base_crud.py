@@ -9,6 +9,11 @@ from .. import config
 ModelIn = TypeVar("ModelIn", bound=BaseModel)
 
 
+class NotFoundError(RuntimeError):
+    def __init__(self, id: int, table: sa.Table):
+        super().__init__(f"{id} of {table} not found")
+
+
 class BaseCRUD(ABC):
     def __init__(self, db: Database):
         self.db = db
