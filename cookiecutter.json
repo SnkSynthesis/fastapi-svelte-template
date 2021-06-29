@@ -1,5 +1,7 @@
 {
     "project_name": "FastAPI and Svelte Template",
     "project_slug": "fastapi-svlete-template",
-    "project_version": "0.1"
+    "project_version": "0.1",
+    "full_name": "example",
+    "email": "example@example.com"
 }
