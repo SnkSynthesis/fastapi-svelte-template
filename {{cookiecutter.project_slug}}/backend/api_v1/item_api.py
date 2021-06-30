@@ -57,4 +57,4 @@ async def delete_item(id: int, item_crud=Depends(get_crud_obj(ItemCRUD))):
     if item is None:
         raise HTTPException(detail="Not Found", status_code=404)
     await item_crud.delete(id)
-    return Response(status=204)
+    return Response(status_code=204)

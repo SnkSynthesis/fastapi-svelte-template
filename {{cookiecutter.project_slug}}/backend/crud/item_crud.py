@@ -25,5 +25,4 @@ class ItemCRUD(BaseCRUD):
             sa.Column("desc", sa.Text),
             sa.Column("owner_username", sa.String(length=50)),
         )
-        self.table.c.id
-        self._metadata_create_all()
+        self.primary_key = self.table.c.id

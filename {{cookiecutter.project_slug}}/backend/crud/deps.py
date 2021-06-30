@@ -12,6 +12,8 @@ async def get_database():
 
 def get_crud_obj(obj_type: Type[BaseCRUD]) -> BaseCRUD:
     def get_obj(db: Database = Depends(get_database)):
-        return obj_type(db)
+        obj = obj_type(db)
+        obj.metadata_create_all()
+        return obj
 
     return get_obj
