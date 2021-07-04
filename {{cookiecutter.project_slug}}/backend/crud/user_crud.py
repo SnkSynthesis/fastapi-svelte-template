@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-import sqlalchemy as sa
+import sqlalchemy as sa  # type: ignore
 from databases import Database
 from .base_crud import BaseCRUD
 
@@ -14,12 +14,11 @@ class User(BaseModel):
 
 
 class UserCRUD(BaseCRUD):
-    def __init__(self, db: Database):
-        super().__init__(db)
-        self.table = sa.Table(
-            "users",
-            self.metadata,
+    def __init__(self, db: Database) -> None:
+        self.tablename = "users"
+        self.columns = (
             sa.Column("username", sa.String(length=50), primary_key=True, unique=True),
             sa.Column("password_hash", sa.Text),
         )
-        self.primary_key = self.table.c.username
+        self.primary_key = "username"
+        super().__init__(db)

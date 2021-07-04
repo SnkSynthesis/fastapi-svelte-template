@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-import sqlalchemy as sa
+import sqlalchemy as sa  # type: ignore
 from databases import Database
 from .base_crud import BaseCRUD
 
@@ -15,14 +15,13 @@ class Item(ItemIn):
 
 
 class ItemCRUD(BaseCRUD):
-    def __init__(self, db: Database):
-        super().__init__(db)
-        self.table = sa.Table(
-            "items",
-            self.metadata,
+    def __init__(self, db: Database) -> None:
+        self.tablename = "items"
+        self.columns = (
             sa.Column("id", sa.Integer, primary_key=True),
             sa.Column("name", sa.String(length=50)),
             sa.Column("desc", sa.Text),
             sa.Column("owner_username", sa.String(length=50)),
         )
-        self.primary_key = self.table.c.id
+        self.primary_key = "id"
+        super().__init__(db)
