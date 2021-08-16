@@ -27,6 +27,8 @@ uvicorn = "^0.14.0"
 aiofiles = "^0.7.0"
 Jinja2 = "^3.0.1"
 pytest-dependency = "^0.5.1"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"
