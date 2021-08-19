@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from fastapi import status
 from requests.models import Response
 import pytest
 
@@ -19,7 +20,7 @@ updated_item = {
 
 def test_error_responses(client: TestClient) -> None:
     def check_response(response: Response) -> None:
-        assert response.status_code == 404, response.text
+        assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
         assert response.json() == {"detail": "Not Found"}
 
     check_response(client.get(f"{ITEM_API_URL}/1"))
@@ -30,7 +31,7 @@ def test_error_responses(client: TestClient) -> None:
 @pytest.mark.dependency()
 def test_create(client: TestClient) -> None:
     response = client.post(f"{ITEM_API_URL}/", json=item)
-    assert response.status_code == 200, response.text
+    assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
     data = response.json()
     assert "id" in data
     del data["id"]
@@ -40,7 +41,7 @@ def test_create(client: TestClient) -> None:
 @pytest.mark.dependency(depends=["test_create"])
 def test_read(client: TestClient) -> None:
     response = client.get(f"{ITEM_API_URL}/1")
-    assert response.status_code == 200, response.text
+    assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
     data = response.json()
     assert "id" in data
     data_without_id = data.copy()
@@ -48,7 +49,7 @@ def test_read(client: TestClient) -> None:
     assert data_without_id == item
 
     response = client.get(f"{ITEM_API_URL}/")
-    assert response.status_code == 200, response.text
+    assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
     assert isinstance(response.json(), list)
     assert data in response.json()
 
@@ -56,7 +57,7 @@ def test_read(client: TestClient) -> None:
 @pytest.mark.dependency(depends=["test_read"])
 def test_update(client: TestClient) -> None:
     response = client.put(f"{ITEM_API_URL}/1", json=updated_item)
-    assert response.status_code == 200, response.text
+    assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
     data = response.json()
     assert "id" in data
     del data["id"]
@@ -66,4 +67,4 @@ def test_update(client: TestClient) -> None:
 @pytest.mark.dependency(depends=["test_update"])
 def test_delete(client: TestClient) -> None:
     response = client.delete(f"{ITEM_API_URL}/1")
-    assert response.status_code == 204, response.text
+    assert response.status_code == status.HTTP_204_NOT_FOUND, response.text
