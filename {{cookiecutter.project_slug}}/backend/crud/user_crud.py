@@ -6,7 +6,7 @@ from .base_crud import BaseCRUD
 
 class UserIn(BaseModel):
     username: str = Field(..., max_length=50)
-    password: str = Field(..., max_length=50)
+    password_hash: str = Field(..., max_length=50)
 
 
 class User(BaseModel):
