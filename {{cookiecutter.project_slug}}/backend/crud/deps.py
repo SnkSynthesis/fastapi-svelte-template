@@ -14,10 +14,10 @@ def is_testing() -> bool:
     return False
 
 
-def get_crud_obj(obj_type: Type[BaseCRUD]) -> Callable[[Database], BaseCRUD]:
+def get_crud_obj(obj_type: Type[BaseCRUD]) -> Callable[[Database], Type[BaseCRUD]]:
     def get_obj(
         db: Database = Depends(get_database), testing: bool = Depends(is_testing)
-    ) -> BaseCRUD:
+    ) -> Type[BaseCRUD]:
         obj = obj_type(db)
         if not testing:
             obj.metadata_create_all(config.db_url)
