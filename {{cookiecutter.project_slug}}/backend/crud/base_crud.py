@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import List, Mapping, Optional, Tuple, TypeVar, Any, Union
+from typing import List, Mapping, Tuple, TypeVar, Any, Union
 from databases import Database
 from pydantic.main import BaseModel
 import sqlalchemy as sa  # type: ignore
