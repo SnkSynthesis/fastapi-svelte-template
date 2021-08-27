@@ -1,5 +1,6 @@
 from typing import Any, Dict, List, Union
 from fastapi import APIRouter, Depends, HTTPException
+from starlette import status
 from starlette.responses import Response
 from ..crud.deps import get_crud_obj
 from ..crud.item_crud import ItemCRUD, Item, ItemIn
@@ -29,7 +30,12 @@ async def get_one_item(
     return item
 
 
-@router.post("/", response_model=Item, responses=common_additional_responses)
+@router.post(
+    "/",
+    response_model=Item,
+    responses=common_additional_responses,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_item(
     item: ItemIn, item_crud: ItemCRUD = Depends(get_crud_obj(ItemCRUD))
 ) -> Any:
