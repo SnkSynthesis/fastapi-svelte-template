@@ -7,11 +7,11 @@ class Configuration(BaseSettings):
     test_db_url: str = "sqlite:///./test.db"
 
     # Define scopes aka permissions
-    scopes: Dict[str, str] = {
-        "admin:delete_user": "Delete any user",
-        "admin:update_user": "Update any user",
-        "admin:delete_item": "Delete any user's item",
-        "admin:update_item": "Update any user's item",
+    scopes: Dict[str, str] = { 
+        "admin:edit_user": "Delete/update any user",
+        "admin:edit_item": "Delete/update any user's item",
+        "admin:edit_scope": "Add a scope to user/delete a user's scope",
+        "admin:read_scopes": "Read a user's scopes",
     }
 
     token_url: str = "/token"

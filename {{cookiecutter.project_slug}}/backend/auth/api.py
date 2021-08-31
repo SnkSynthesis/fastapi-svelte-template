@@ -12,18 +12,21 @@ from jose import jwt
 from .context import Token, pwd_context
 from ..configuration import config
 from typing import Union
+from datetime import datetime, timedelta
 
 router = APIRouter(tags=["Authentication"])
 
 
 def create_access_token(data: dict) -> str:
     datacopy = data.copy()
-    datacopy.update({"exp": config.token_expire})
+    datacopy.update({"exp": datetime.utcnow() + timedelta(minutes=config.token_expire)})
     token = jwt.encode(datacopy, config.secret_key, algorithm=config.algorithm)
     return token
 
 
-async def authenticate_user(user_crud: UserCRUD, username: str, password: str) -> Union[UserInDB, None]:
+async def authenticate_user(
+    user_crud: UserCRUD, username: str, password: str
+) -> Union[UserInDB, None]:
     user = await user_crud.get_one(username)
     if user is None:
         return None
@@ -34,7 +37,10 @@ async def authenticate_user(user_crud: UserCRUD, username: str, password: str) -
 
 
 @router.post("/token", response_model=Token)
-async def get_token(form_data: OAuth2PasswordRequestForm = Depends(), user_crud: UserCRUD = Depends(get_crud_obj(UserCRUD))):
+async def get_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    user_crud: UserCRUD = Depends(get_crud_obj(UserCRUD)),
+):
     user = await authenticate_user(user_crud, form_data.username, form_data.password)
     if user is None:
         raise HTTPException(
@@ -42,8 +48,7 @@ async def get_token(form_data: OAuth2PasswordRequestForm = Depends(), user_crud:
             detail="User not found. Incorrect username or password",
         )
 
-    # form_data.scopes temporary
     access_token = create_access_token(
-        data={"sub": user.username, "scopes": form_data.scopes}
+        data={"sub": user.username, "scopes": await user_crud.get_scopes(user.username)}
     )
     return {"access_token": access_token, "token_type": "bearer"}
