@@ -1,4 +1,4 @@
-# fastapi-svelte-template
+# [WIP] fastapi-svelte-template
 This project is work-in-progress.
 
 ## Cloning the Template
